@@ -1,10 +1,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+// Vertex shader
 const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
@@ -12,12 +15,15 @@ layout (location = 1) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 
+uniform mat4 transform;
+
 void main() {
-    gl_Position = vec4(aPos, 1.0);
+    gl_Position = transform * vec4(aPos, 1.0);
     TexCoord = aTexCoord;
 }
 )";
 
+// Fragment shader
 const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
@@ -44,7 +50,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Textures", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Transformations", NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -61,7 +67,7 @@ int main() {
         return -1;
     }
 
-    // Define the vertex data with texture coordinates
+    // Define vertices with texture coordinates
     float vertices[] = {
         // Positions         // Texture Coords
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // Bottom-left
@@ -69,7 +75,7 @@ int main() {
          0.0f,  0.5f, 0.0f,  0.5f, 1.0f   // Top
     };
 
-    // Create and bind VAO and VBO
+    // Create VAO and VBO
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -87,15 +93,17 @@ int main() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // Compile and link shaders
+    // Compile vertex shader
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
 
+    // Compile fragment shader
     unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
 
+    // Link shaders to a program
     unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
@@ -109,6 +117,7 @@ int main() {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+    // Set texture wrapping/filtering options
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -124,20 +133,32 @@ int main() {
     }
     stbi_image_free(data);
 
-    // Render loop
+    // Main render loop
     while (!glfwWindowShouldClose(window)) {
+        // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // Apply transformations
+        glm::mat4 transform = glm::mat4(1.0f);
+        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        // Get the transformation matrix uniform location and set it
+        unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
+        // Render the object
         glBindTexture(GL_TEXTURE_2D, texture);
         glUseProgram(shaderProgram);
-
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        // Swap buffers and poll for events
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    // Clean up and terminate
     glfwTerminate();
     return 0;
 }
