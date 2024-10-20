@@ -2,13 +2,19 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
+
+out vec2 TexCoord;
 
 void main() {
     gl_Position = vec4(aPos, 1.0);
+    TexCoord = aTexCoord;
 }
 )";
 
@@ -16,10 +22,12 @@ const char* fragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
 
-uniform vec4 ourColor;  // The uniform variable
+in vec2 TexCoord;
+
+uniform sampler2D ourTexture;
 
 void main() {
-    FragColor = ourColor;
+    FragColor = texture(ourTexture, TexCoord);
 }
 )";
 
@@ -36,7 +44,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Shaders and Uniforms", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Textures", NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -53,14 +61,15 @@ int main() {
         return -1;
     }
 
-    // Define the vertex data (positions of the triangle vertices)
+    // Define the vertex data with texture coordinates
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,  // Bottom-left vertex
-         0.5f, -0.5f, 0.0f,  // Bottom-right vertex
-         0.0f,  0.5f, 0.0f   // Top vertex
+        // Positions         // Texture Coords
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  // Bottom-left
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f,  // Bottom-right
+         0.0f,  0.5f, 0.0f,  0.5f, 1.0f   // Top
     };
 
-    // Create and bind a Vertex Array Object (VAO)
+    // Create and bind VAO and VBO
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -70,10 +79,15 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Create and compile the vertex and fragment shaders
+    // Texture coordinate attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // Compile and link shaders
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
@@ -82,40 +96,48 @@ int main() {
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
 
-    // Link shaders to a shader program
     unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
-    // Clean up shaders after linking
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    // Load and create a texture
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("wall.jpg", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
     // Render loop
     while (!glfwWindowShouldClose(window)) {
-        // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Use the shader program
+        glBindTexture(GL_TEXTURE_2D, texture);
         glUseProgram(shaderProgram);
 
-        // Dynamically change the color over time
-        float timeValue = glfwGetTime();
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;  // Oscillate the green component
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);  // Set the color
-
-        // Draw the triangle
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        // Swap buffers and poll events
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // Clean up and close
     glfwTerminate();
     return 0;
 }
