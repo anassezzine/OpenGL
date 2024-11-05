@@ -57,26 +57,29 @@ int main()
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
 
 	// Load meshes and textures
-	const int numModels = 3;
+	const int numModels = 4;
 	Mesh mesh[numModels];
 	Texture2D texture[numModels];
 
 	mesh[0].loadOBJ("models/floor.obj");
 	mesh[1].loadOBJ("models/road.obj");
 	mesh[2].loadOBJ("models/house.obj");
+	mesh[3].loadOBJ("models/car.obj");
 
 
 	
 	texture[0].loadTexture("textures/tile_floor.jpg", true);
 	texture[1].loadTexture("textures/road.png", true);
 	texture[2].loadTexture("textures/house.png", true);
+	texture[3].loadTexture("textures/car.jpeg", true);
 
 	
 	// Model positions
 	glm::vec3 modelPos[] = {
 		glm::vec3(0.0f, 0.0f, 0.0f),	// floor
 		glm::vec3(0.0f,-3.5f,0.0f),		// road
-		glm::vec3(0.0f,0.0f,-25.0f),		// house
+		glm::vec3(0.0f,0.0f,-25.0f),	// house
+		glm::vec3(-17.0f,0.0f,-21.0f),	// car
 
 	};
 
@@ -85,6 +88,7 @@ int main()
 		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
 		glm::vec3(0.5f, 0.5f, 0.5f),	// road
 		glm::vec3(1.0f, 1.0f, 1.0f),	// house
+		glm::vec3(0.025f, 0.025f, 0.025f),	// car
 	};
 
 	// Point Light positions

@@ -1,0 +1,22 @@
+# Blender 4.2.3 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl _Lamborghini_AventadorLamborghini_Aventador_BodySG
+Ns 18.000004
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd /home/anass-ezzine/Bureau/FISA/S7/CAR Model/Lamborginhi Aventador_diffuse.jpeg
+map_Ks /home/anass-ezzine/Bureau/FISA/S7/CAR Model/Lamborginhi Aventador_spec.jpeg
+
+newmtl _Lamborghini_AventadorLamborghini_Aventador_GlassSG
+Ns 4.309999
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.700000 0.700000 0.700000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.060000
+illum 9
