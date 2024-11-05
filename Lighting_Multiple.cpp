@@ -57,58 +57,36 @@ int main()
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
 
 	// Load meshes and textures
-	const int numModels = 9;
+	const int numModels = 2;
 	Mesh mesh[numModels];
 	Texture2D texture[numModels];
 
 	mesh[0].loadOBJ("models/floor.obj");
-	mesh[1].loadOBJ("models/lampPost.obj");
-	mesh[2].loadOBJ("models/lampPost.obj");
-	mesh[3].loadOBJ("models/lampPost.obj");
-	mesh[4].loadOBJ("models/lampPost.obj");
-	mesh[5].loadOBJ("models/lampPost.obj");
-	mesh[6].loadOBJ("models/lampPost.obj");
+	mesh[1].loadOBJ("models/road.obj");
 
 
-
+	
 	texture[0].loadTexture("textures/tile_floor.jpg", true);
-	texture[1].loadTexture("textures/lamp_post_diffuse.png", true);
-	texture[2].loadTexture("textures/lamp_post_diffuse.png", true);
-	texture[3].loadTexture("textures/lamp_post_diffuse.png", true);
- 	texture[4].loadTexture("textures/lamp_post_diffuse.png", true);
-	texture[5].loadTexture("textures/lamp_post_diffuse.png", true);
-	texture[6].loadTexture("textures/lamp_post_diffuse.png", true);
+	texture[1].loadTexture("textures/road.png", true);
 
-
-
+	
 	// Model positions
 	glm::vec3 modelPos[] = {
 		glm::vec3(0.0f, 0.0f, 0.0f),	// floor
-		glm::vec3(-5.5f, 0.0f, 0.0f),	// lamp post 1
-		glm::vec3(0.0f, 0.0f, 0.0f),	// lamp post 2
-		glm::vec3(5.5f, 0.0f, 0.0f),	// lamp post 3
-		glm::vec3(-5.5f, 0.0f, 5.5f),	// lamp post 1
-		glm::vec3(0.0f, 0.0f, 5.5f),	// lamp post 2
-		glm::vec3(5.5f, 0.0f, 5.5f),	// lamp post 3
-
+		glm::vec3(0.0f,-2.5f,0.0f),		// road
 	};
 
 	// Model scale
 	glm::vec3 modelScale[] = {
 		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 1
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 2
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 3
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 1
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 2
-		glm::vec3(1.0f, 1.0f, 1.0f),	// lamp post 3
+		glm::vec3(0.5f, 0.5f, 0.5f),	// road
 	};
 
 	// Point Light positions
 	glm::vec3 pointLightPos[3] = {
 		glm::vec3(-5.0f, 3.8f, 0.0f),
 		glm::vec3(0.5f,  3.8f, 0.0f),
-		glm::vec3(5.0f,  3.8,  0.0f)
+		glm::vec3(5.0f,  3.8,  0.0f),
 	};
 
 
@@ -155,7 +133,7 @@ int main()
 		// Directional light
 		lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
 		lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		lightingShader.setUniform("sunLight.diffuse", glm::vec3(0.1f, 0.1f, 0.1f));		// dark
+		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
 		lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
 
 		// Point Light 1
