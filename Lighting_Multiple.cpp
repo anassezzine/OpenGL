@@ -77,9 +77,9 @@ int main()
 	// Model positions
 	glm::vec3 modelPos[] = {
 		glm::vec3(0.0f, 0.0f, 0.0f),	// floor
-		glm::vec3(0.0f,-3.5f,0.0f),		// road
+		glm::vec3(0.0f,-3.65f,0.0f),		// road
 		glm::vec3(0.0f,0.0f,-25.0f),	// house
-		glm::vec3(-17.0f,0.0f,-21.0f),	// car
+		glm::vec3(0.0f,0.5f,-5.0f),	// car
 
 	};
 
@@ -88,14 +88,16 @@ int main()
 		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
 		glm::vec3(0.5f, 0.5f, 0.5f),	// road
 		glm::vec3(1.0f, 1.0f, 1.0f),	// house
-		glm::vec3(0.025f, 0.025f, 0.025f),	// car
+		glm::vec3(0.03f, 0.03f, 0.03f),	// car
 	};
 
 	// Point Light positions
-	glm::vec3 pointLightPos[3] = {
+	glm::vec3 pointLightPos[4] = {
 		glm::vec3(-5.0f, 3.8f, 0.0f),
 		glm::vec3(0.5f,  3.8f, 0.0f),
 		glm::vec3(5.0f,  3.8,  0.0f),
+		glm::vec3(0.0f,  5.0,  -20.0f),
+		
 	};
 
 
@@ -142,7 +144,7 @@ int main()
 		// Directional light
 		lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
 		lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
+		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// sun
 		lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
 
 		// Point Light 1
@@ -172,6 +174,15 @@ int main()
 		lightingShader.setUniform("pointLights[2].linear", 0.22f);
 		lightingShader.setUniform("pointLights[2].exponent", 0.20f);
 
+		//Point Light 4
+		lightingShader.setUniform("pointLights[1].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		lightingShader.setUniform("pointLights[1].diffuse", glm::vec3(1.0f, 0.1f, 0.0f));	// red-ish light
+		lightingShader.setUniform("pointLights[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[1].position", pointLightPos[1]);
+		lightingShader.setUniform("pointLights[1].constant", 1.0f);
+		lightingShader.setUniform("pointLights[1].linear", 0.22f);
+		lightingShader.setUniform("pointLights[1].exponent", 0.20f);
+
 		// Spot light
 		glm::vec3 spotlightPos = fpsCamera.getPosition();
 
@@ -191,21 +202,31 @@ int main()
 		lightingShader.setUniform("spotLight.on", gFlashlightOn);
 
 		// Render the scene
-		for (int i = 0; i < numModels; i++)
-		{
-			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
-			lightingShader.setUniform("model", model);
+		for (int i = 0; i < numModels; ++i) {
+            model = glm::mat4(1.0f); // Réinitialiser la matrice modèle pour chaque mesh
 
-			// Set material properties
-			lightingShader.setUniform("material.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-			lightingShader.setUniformSampler("material.diffuseMap", 0);
-			lightingShader.setUniform("material.specular", glm::vec3(0.8f, 0.8f, 0.8f));
-			lightingShader.setUniform("material.shininess", 32.0f);
+            // Appliquer des transformations spécifiques pour mesh[47]
+            if (i == 3) {
+                model = glm::translate(model, modelPos[i]);   // Translation
+                model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation
+                model = glm::scale(model, modelScale[i]);      // Échelle
+            }else {
+                model = glm::translate(model, modelPos[i]);    // Translation
+                model = glm::scale(model, modelScale[i]);      // Échelle
+            }
 
-			texture[i].bind(0);		// set the texture before drawing.  Our simple OBJ mesh loader does not do materials yet.
-			mesh[i].draw();			// Render the OBJ mesh
-			texture[i].unbind(0);
-		}
+            // Charger les transformations et les propriétés du matériau dans le shader
+            lightingShader.setUniform("model", model); 
+            lightingShader.setUniform("material.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+            lightingShader.setUniformSampler("material.diffuseMap", 0);
+            lightingShader.setUniform("material.specular", glm::vec3(0.8f, 0.8f, 0.8f));
+            lightingShader.setUniform("material.shininess", 32.0f);
+
+            // Activer la texture et dessiner le mesh
+            texture[i].bind(0); 
+            mesh[i].draw();     
+            texture[i].unbind(0);
+        }   
 
 				// Swap front and back buffers
 		glfwSwapBuffers(gWindow);
