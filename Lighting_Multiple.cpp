@@ -37,7 +37,7 @@ const float MOUSE_SENSITIVITY = 0.1f;
 void glfw_onKey(GLFWwindow* window, int key, int scancode, int action, int mode);
 void glfw_onFramebufferSize(GLFWwindow* window, int width, int height);
 void glfw_onMouseScroll(GLFWwindow* window, double deltaX, double deltaY);
-void update(double elapsedTime);
+void update(double elapsedTime, glm::vec3&);
 void showFPS(GLFWwindow* window);
 bool initOpenGL();
 
@@ -57,7 +57,7 @@ int main()
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
 
 	// Load meshes and textures
-	const int numModels = 9;
+	const int numModels = 10;
 	Mesh mesh[numModels];
 	Texture2D texture[numModels];
 
@@ -70,6 +70,7 @@ int main()
 	mesh[6].loadOBJ("models/lampPost.obj");
 	mesh[7].loadOBJ("models/car.obj");
 	mesh[8].loadOBJ("models/garden.obj");
+	mesh[9].loadOBJ("models/lampPost.obj");
 
 
 
@@ -83,6 +84,8 @@ int main()
 	texture[6].loadTexture("textures/lamp_post_diffuse.png", true);
 	texture[7].loadTexture("textures/secondcar.jpeg", true);
 	texture[8].loadTexture("textures/garden.png", true);
+	texture[9].loadTexture("textures/lamp_post_diffuse.png", true);
+
 
 	
 	// Model positions
@@ -90,12 +93,13 @@ int main()
 		glm::vec3(0.0f, 0.0f, 0.0f),	// floor (x,y,z) -z recule, +z avance
 		glm::vec3(0.0f,-3.65f,0.0f),	// road
 		glm::vec3(0.0f,0.0f,-27.2f),	// house
-		glm::vec3(0.0f,0.5f,-5.0f),		// car
+		glm::vec3(150.0f,0.5f,-5.0f),	// car
 		glm::vec3(-25.0f,0.0f,-25.0f),	// lamp
 		glm::vec3(-25.0f,0.0f,-35.0f),	// lamp
 		glm::vec3(-25.0f,0.0f,-45.0f),	// lamp
 		glm::vec3(-19.0f,0.0f,-25.0f),	// second car
 		glm::vec3(22.3f,0.0f,-27.9f),	// garden
+		glm::vec3(15.0f,0.0f,-14.9f),	// lamp
 
 	};
 
@@ -110,6 +114,7 @@ int main()
 		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
 		glm::vec3(0.03f, 0.03f, 0.03f),	// second car
 		glm::vec3(0.5f, 0.5f, 1.0f),	// garden
+		glm::vec3(2.0f, 4.0f, 2.0f),	// lamp
 	};
 
 	// Point Light positions
@@ -135,7 +140,7 @@ int main()
 
 		// Poll for and process events
 		glfwPollEvents();
-		update(deltaTime);
+		update(deltaTime, modelPos[3]);
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -166,7 +171,7 @@ int main()
 		// Directional light
 		lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
 		lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		lightingShader.setUniform("sunLight.diffuse", glm::vec3(0.1f, 0.1f, 0.1f));		// dark
+		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
 		lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
 
 		// Point Light 1
@@ -235,7 +240,7 @@ int main()
 		for (int i = 0; i < numModels; ++i) {
             model = glm::mat4(1.0f); // Réinitialiser la matrice modèle pour chaque mesh
 
-            // Appliquer des transformations spécifiques pour mesh[47]
+            // Appliquer des transformations spécifiques pour mesh[3]
             if (i == 3) {
                 model = glm::translate(model, modelPos[i]);   // Translation
                 model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation
@@ -388,8 +393,20 @@ void glfw_onMouseScroll(GLFWwindow* window, double deltaX, double deltaY)
 //-----------------------------------------------------------------------------
 // Update stuff every frame
 //-----------------------------------------------------------------------------
-void update(double elapsedTime)
+
+float movementRange = 40.0f;   // Amplitude du mouvement horizontal
+float movementSpeed = 10.0f;     // Vitesse de déplacement de l'objet
+
+void update(double elapsedTime, glm::vec3& pos)
 {
+    // Utiliser une position qui fait un aller simple de droite à gauche puis recommence
+    float totalRange = 2 * movementRange;  // Plage complète de déplacement de +40 à -40
+    float posX = fmod(movementSpeed * (float)glfwGetTime(), totalRange);  // Position cyclique de 0 à totalRange
+
+    // Transformer pour qu'elle aille de +movementRange à -movementRange
+    pos.x = movementRange - posX;
+
+
 	// Camera orientation
 	double mouseX, mouseY;
 
