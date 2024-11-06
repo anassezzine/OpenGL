@@ -57,7 +57,7 @@ int main()
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
 
 	// Load meshes and textures
-	const int numModels = 4;
+	const int numModels = 9;
 	Mesh mesh[numModels];
 	Texture2D texture[numModels];
 
@@ -65,6 +65,12 @@ int main()
 	mesh[1].loadOBJ("models/road.obj");
 	mesh[2].loadOBJ("models/house.obj");
 	mesh[3].loadOBJ("models/car.obj");
+	mesh[4].loadOBJ("models/lampPost.obj");
+	mesh[5].loadOBJ("models/lampPost.obj");
+	mesh[6].loadOBJ("models/lampPost.obj");
+	mesh[7].loadOBJ("models/car.obj");
+	mesh[8].loadOBJ("models/garden.obj");
+
 
 
 	
@@ -72,14 +78,24 @@ int main()
 	texture[1].loadTexture("textures/road.png", true);
 	texture[2].loadTexture("textures/house.png", true);
 	texture[3].loadTexture("textures/car.jpeg", true);
+	texture[4].loadTexture("textures/lamp_post_diffuse.png", true);
+	texture[5].loadTexture("textures/lamp_post_diffuse.png", true);
+	texture[6].loadTexture("textures/lamp_post_diffuse.png", true);
+	texture[7].loadTexture("textures/secondcar.jpeg", true);
+	texture[8].loadTexture("textures/garden.png", true);
 
 	
 	// Model positions
 	glm::vec3 modelPos[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),	// floor
-		glm::vec3(0.0f,-3.65f,0.0f),		// road
-		glm::vec3(0.0f,0.0f,-25.0f),	// house
-		glm::vec3(0.0f,0.5f,-5.0f),	// car
+		glm::vec3(0.0f, 0.0f, 0.0f),	// floor (x,y,z) -z recule, +z avance
+		glm::vec3(0.0f,-3.65f,0.0f),	// road
+		glm::vec3(0.0f,0.0f,-27.2f),	// house
+		glm::vec3(0.0f,0.5f,-5.0f),		// car
+		glm::vec3(-25.0f,0.0f,-25.0f),	// lamp
+		glm::vec3(-25.0f,0.0f,-35.0f),	// lamp
+		glm::vec3(-25.0f,0.0f,-45.0f),	// lamp
+		glm::vec3(-19.0f,0.0f,-25.0f),	// second car
+		glm::vec3(22.3f,0.0f,-27.9f),	// garden
 
 	};
 
@@ -87,16 +103,22 @@ int main()
 	glm::vec3 modelScale[] = {
 		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
 		glm::vec3(0.5f, 0.5f, 0.5f),	// road
-		glm::vec3(1.0f, 1.0f, 1.0f),	// house
+		glm::vec3(1.3f, 1.3f, 1.3f),	// house
 		glm::vec3(0.03f, 0.03f, 0.03f),	// car
+		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
+		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
+		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
+		glm::vec3(0.03f, 0.03f, 0.03f),	// second car
+		glm::vec3(0.5f, 0.5f, 1.0f),	// garden
 	};
 
 	// Point Light positions
-	glm::vec3 pointLightPos[4] = {
-		glm::vec3(-5.0f, 3.8f, 0.0f),
-		glm::vec3(0.5f,  3.8f, 0.0f),
-		glm::vec3(5.0f,  3.8,  0.0f),
-		glm::vec3(0.0f,  5.0,  -20.0f),
+	glm::vec3 pointLightPos[5] = {
+		glm::vec3(-25.0f,10.0f,-45.0f), //third lamp
+		glm::vec3(-25.0f,10.0f,-35.0f), //second lamp
+		glm::vec3(-25.0f,10.0f,-25.0f), // first lamp
+		glm::vec3(13.0f, 23.0f, -10.0f), //house 
+		glm::vec3(0.0f,  5.0f,  -20.0f), //door
 		
 	};
 
@@ -144,44 +166,52 @@ int main()
 		// Directional light
 		lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
 		lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// sun
+		lightingShader.setUniform("sunLight.diffuse", glm::vec3(0.1f, 0.1f, 0.1f));		// dark
 		lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
 
 		// Point Light 1
-		lightingShader.setUniform("pointLights[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		lightingShader.setUniform("pointLights[0].diffuse", glm::vec3(0.0f, 1.0f, 0.1f));	// green-ish light
-		lightingShader.setUniform("pointLights[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[0].ambient", glm::vec3(3.0f, 3.0f, 3.0f));
+		lightingShader.setUniform("pointLights[0].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[0].specular", glm::vec3(2.0f, 2.0f, 2.0f));
 		lightingShader.setUniform("pointLights[0].position", pointLightPos[0]);
 		lightingShader.setUniform("pointLights[0].constant", 1.0f);
-		lightingShader.setUniform("pointLights[0].linear", 0.22f);
-		lightingShader.setUniform("pointLights[0].exponent", 0.20f);
+		lightingShader.setUniform("pointLights[0].linear", 0.11f);
+		lightingShader.setUniform("pointLights[0].exponent", 0.10f);
 
 		// Point Light 2
-		lightingShader.setUniform("pointLights[1].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		lightingShader.setUniform("pointLights[1].diffuse", glm::vec3(1.0f, 0.1f, 0.0f));	// red-ish light
-		lightingShader.setUniform("pointLights[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[1].ambient", glm::vec3(3.0f, 3.0f, 3.0f));
+		lightingShader.setUniform("pointLights[1].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));	
+		lightingShader.setUniform("pointLights[1].specular", glm::vec3(2.0f, 2.0f, 2.0f));
 		lightingShader.setUniform("pointLights[1].position", pointLightPos[1]);
 		lightingShader.setUniform("pointLights[1].constant", 1.0f);
-		lightingShader.setUniform("pointLights[1].linear", 0.22f);
-		lightingShader.setUniform("pointLights[1].exponent", 0.20f);
+		lightingShader.setUniform("pointLights[1].linear", 0.11f);
+		lightingShader.setUniform("pointLights[1].exponent", 0.10f);
 
-		// Point Light 3
-		lightingShader.setUniform("pointLights[2].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		lightingShader.setUniform("pointLights[2].diffuse", glm::vec3(0.0f, 0.1f, 1.0f));	// blue-ish light
-		lightingShader.setUniform("pointLights[2].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[2].ambient", glm::vec3(3.0f, 3.0f, 3.0f));
+		lightingShader.setUniform("pointLights[2].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));	
+		lightingShader.setUniform("pointLights[2].specular", glm::vec3(2.0f, 2.0f, 2.0f));
 		lightingShader.setUniform("pointLights[2].position", pointLightPos[2]);
 		lightingShader.setUniform("pointLights[2].constant", 1.0f);
-		lightingShader.setUniform("pointLights[2].linear", 0.22f);
-		lightingShader.setUniform("pointLights[2].exponent", 0.20f);
+		lightingShader.setUniform("pointLights[2].linear", 0.11f);
+		lightingShader.setUniform("pointLights[2].exponent", 0.10f);
+
+		// Point Light 3
+		lightingShader.setUniform("pointLights[3].ambient", glm::vec3(3.0f, 3.0f, 3.0f));  
+		lightingShader.setUniform("pointLights[3].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));  
+		lightingShader.setUniform("pointLights[3].specular", glm::vec3(2.0f, 2.0f, 2.0f));  //surface
+		lightingShader.setUniform("pointLights[3].position", pointLightPos[3]);
+		lightingShader.setUniform("pointLights[3].constant", 1.0f);
+		lightingShader.setUniform("pointLights[3].linear", 0.11f);
+		lightingShader.setUniform("pointLights[3].exponent", 0.10f);
 
 		//Point Light 4
-		lightingShader.setUniform("pointLights[1].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		lightingShader.setUniform("pointLights[1].diffuse", glm::vec3(1.0f, 0.1f, 0.0f));	// red-ish light
-		lightingShader.setUniform("pointLights[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		lightingShader.setUniform("pointLights[1].position", pointLightPos[1]);
-		lightingShader.setUniform("pointLights[1].constant", 1.0f);
-		lightingShader.setUniform("pointLights[1].linear", 0.22f);
-		lightingShader.setUniform("pointLights[1].exponent", 0.20f);
+		lightingShader.setUniform("pointLights[4].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		lightingShader.setUniform("pointLights[4].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));	
+		lightingShader.setUniform("pointLights[4].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		lightingShader.setUniform("pointLights[4].position", pointLightPos[4]);
+		lightingShader.setUniform("pointLights[4].constant", 1.0f);
+		lightingShader.setUniform("pointLights[4].linear", 0.22f);
+		lightingShader.setUniform("pointLights[4].exponent", 0.20f);
 
 		// Spot light
 		glm::vec3 spotlightPos = fpsCamera.getPosition();

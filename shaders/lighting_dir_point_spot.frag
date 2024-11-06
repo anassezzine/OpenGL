@@ -58,7 +58,7 @@ in vec2 TexCoord;
 in vec3 FragPos;
 in vec3 Normal;
 
-#define MAX_POINT_LIGHTS 3
+#define MAX_POINT_LIGHTS 5
 
 uniform DirectionalLight sunLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
