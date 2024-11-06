@@ -25,6 +25,7 @@ int gWindowHeight = 768;
 GLFWwindow* gWindow = NULL;
 bool gWireframe = false;
 bool gFlashlightOn = true;
+bool gLightOn = true;
 glm::vec4 gClearColor(0.06f, 0.06f, 0.07f, 1.0f);
 
 FPSCamera fpsCamera(glm::vec3(0.0f, 3.5f, 10.0f));
@@ -121,10 +122,9 @@ int main()
 	glm::vec3 pointLightPos[5] = {
 		glm::vec3(-25.0f,10.0f,-45.0f), //third lamp
 		glm::vec3(-25.0f,10.0f,-35.0f), //second lamp
-		glm::vec3(-25.0f,10.0f,-25.0f), // first lamp
-		glm::vec3(13.0f, 23.0f, -10.0f), //house 
+		glm::vec3(-25.0f,10.0f,-25.0f), //first lamp
+		glm::vec3(15.0f,17.0f,-10.0f),   //forth lamp
 		glm::vec3(0.0f,  5.0f,  -20.0f), //door
-		
 	};
 
 
@@ -169,10 +169,21 @@ int main()
 		lightingShader.setUniform("viewPos", viewPos);
 
 		// Directional light
-		lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
-		lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-		lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
-		lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
+		if(gLightOn)
+		{
+			lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
+			lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+			lightingShader.setUniform("sunLight.diffuse", glm::vec3(0.1f, 0.1f, 0.1f));		// dark
+			lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
+		}
+		else
+		{
+			lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
+			lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+			lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
+			lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
+		}
+		
 
 		// Point Light 1
 		lightingShader.setUniform("pointLights[0].ambient", glm::vec3(3.0f, 3.0f, 3.0f));
@@ -359,6 +370,12 @@ void glfw_onKey(GLFWwindow* window, int key, int scancode, int action, int mode)
 		// toggle the flashlight
 		gFlashlightOn = !gFlashlightOn;
 	}
+
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		gLightOn = !gLightOn;
+	}
+
 }
 
 //-----------------------------------------------------------------------------
