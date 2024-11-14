@@ -1,45 +1,115 @@
-## Description du projet
-Ce projet utilise OpenGL 3.3 avec GLFW et GLEW pour créer une scène 3D interactive comportant plusieurs sources lumineuses, une caméra FPS, des modèles 3D, des textures et des shaders pour l'éclairage. L'éclairage est basé sur le modèle Blinn-Phong et comprend des lumières directionnelles, ponctuelles et un spot lumineux.
+# 🎮 Scene 3D Interactive avec OpenGL
+[![OpenGL](https://img.shields.io/badge/OpenGL-3.3-red.svg)](https://www.opengl.org/)
+[![GLFW](https://img.shields.io/badge/GLFW-3.3-blue.svg)](https://www.glfw.org/)
+[![GLEW](https://img.shields.io/badge/GLEW-2.1-green.svg)](http://glew.sourceforge.net/)
 
-## Fonctionnalités principales
-- Initialisation de la fenêtre et gestion via GLFW et OpenGL.
-- Chargement et rendu de 11 modèles 3D texturés (sol, maisons, voitures, lampes, etc.).
-- Gestion des différentes sources lumineuses (directionnelle, ponctuelles, et spotlight).
-- Caméra FPS pour naviguer dans la scène avec contrôle clavier et souris.
-- Shaders pour l'application de l'éclairage et des textures.
-- Interactions utilisateur pour activer/désactiver les lumières et changer l'affichage.
+<div align="center">
+  <p>
+    <strong>Une scène 3D interactive avec éclairage dynamique et modèles texturés</strong>
+  </p>
+  
+  [Voir la Démonstration](https://www.youtube.com/watch?v=hUxK6ndhZFI)
+</div>
 
-## Structure du code
-- **ShaderProgram.cpp** : Gère la compilation et l'utilisation des shaders.
-- **Camera.cpp** : Implémente la caméra FPS pour le déplacement et la rotation.
-- **Mesh.cpp** : Contient la structure et les méthodes pour dessiner les modèles 3D.
-- **Lighting_Multiple.cpp** : Le point d'entrée principal qui configure l'éclairage et la scène.
-- **Texture2D.cpp** : Gère le chargement et l'application des textures.
+---
 
-## Compilation et exécution
-Pour compiler et exécuter le projet, utilisez la commande suivante dans le terminal :
+## 📝 Description
+
+Ce projet met en œuvre une scène 3D interactive utilisant OpenGL 3.3, démontrant des techniques avancées de rendu et d'éclairage. Il combine plusieurs technologies pour créer une expérience visuelle immersive :
+
+- 🔲 Rendu 3D avec OpenGL 3.3
+- 💡 Système d'éclairage Blinn-Phong
+- 🎥 Caméra FPS interactive
+- 🏠 Modèles 3D texturés
+- ⚡ Shaders personnalisés
+
+## ✨ Fonctionnalités
+
+### 🏗️ Éléments de la Scène
+- Rendu de 11 modèles 3D texturés
+  - Sol et environnement
+  - Bâtiments et structures
+  - Véhicules
+  - Éléments d'éclairage
+
+### 💡 Système d'Éclairage
+- Lumière directionnelle (soleil)
+- Sources de lumière ponctuelles
+- Spotlight (lampe de poche)
+- Modèle d'éclairage Blinn-Phong
+
+### 🎮 Contrôles
+- Navigation fluide en mode FPS
+- Contrôle complet de la caméra
+- Interaction avec les sources lumineuses
+
+## 🗂️ Structure du Projet
+
+```
+src/
+├── ShaderProgram.cpp  # Gestion des shaders
+├── Camera.cpp         # Système de caméra FPS
+├── Mesh.cpp          # Gestion des modèles 3D
+├── Lighting_Multiple.cpp  # Programme principal
+└── Texture2D.cpp     # Gestion des textures
+```
+
+## 🚀 Installation
+
+### Prérequis
+- OpenGL 3.3+
+- GLFW 3.3+
+- GLEW 2.1+
+
+### Compilation
 
 ```bash
-g++ ShaderProgram.cpp Camera.cpp Mesh.cpp Lighting_Multiple.cpp Texture2D.cpp -o app -lglfw -lGLEW -lGL
+# Installation des dépendances sur Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install libglfw3-dev libglew-dev
+
+# Compilation du projet
+g++ ShaderProgram.cpp Camera.cpp Mesh.cpp \
+    Lighting_Multiple.cpp Texture2D.cpp \
+    -o app -lglfw -lGLEW -lGL
+
+# Exécution
 ./app
 ```
 
-## Prérequis
-- **GLFW** : Bibliothèque pour la gestion des fenêtres et des entrées.
-- **GLEW** : Extension de gestion OpenGL.
-- **OpenGL 3.3** : Version minimale requise pour l'exécution.
+## 🎮 Guide d'Utilisation
 
-Assurez-vous que les bibliothèques nécessaires (GLFW, GLEW, OpenGL) soient correctement installées sur votre système.
+### Commandes
+| Touche | Action |
+|--------|--------|
+| `ESC` | Quitter l'application |
+| `F1` | Basculer mode fil de fer |
+| `F` | Activer/désactiver la lampe de poche |
+| `ESPACE` | Activer/désactiver la lumière principale |
+| `ZQSD` | Déplacement de la caméra |
+| `Souris` | Orientation de la caméra |
 
-## Interactions utilisateur
-- **ESC** : Ferme l'application.
-- **F1** : Bascule entre l'affichage en fil de fer et l'affichage solide.
-- **F** : Active/désactive le spotlight (lampe de poche).
-- **ESPACE** : Active/désactive l'éclairage directionnel.
+## 🎥 Démonstration
 
-## Démonstration vidéo
-Une vidéo de démonstration complète du projet est disponible, expliquant le code et montrant la scène en action :
-[Voir la démonstration sur YouTube](https://www.youtube.com/watch?v=hUxK6ndhZFI)
+Une vidéo détaillée expliquant le code et montrant la scène en action est disponible :
 
-## Conclusion
-Ce projet est un exemple complet d'une scène 3D avec éclairage avancé et interaction utilisateur. Il peut être utilisé comme base pour développer des applications graphiques plus complexes ou pour l'apprentissage des concepts d'éclairage en OpenGL.
+[![Démonstration Vidéo](https://img.shields.io/badge/YouTube-Voir_la_Démo-red)](https://www.youtube.com/watch?v=hUxK6ndhZFI)
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+- Signaler des bugs
+- Proposer des améliorations
+- Soumettre des pull requests
+
+## 📜 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+---
+
+<div align="center">
+  <p>
+    <strong>Développé avec ❤️ pour les passionnés de graphisme 3D</strong>
+  </p>
+</div>
