@@ -1,0 +1,42 @@
+## Description du projet
+Ce projet utilise OpenGL 3.3 avec GLFW et GLEW pour créer une scène 3D interactive comportant plusieurs sources lumineuses, une caméra FPS, des modèles 3D, des textures et des shaders pour l'éclairage. L'éclairage est basé sur le modèle Blinn-Phong et comprend des lumières directionnelles, ponctuelles et un spot lumineux.
+
+## Fonctionnalités principales
+- Initialisation de la fenêtre et gestion via GLFW et OpenGL.
+- Chargement et rendu de 11 modèles 3D texturés (sol, maisons, voitures, lampes, etc.).
+- Gestion des différentes sources lumineuses (directionnelle, ponctuelles, et spotlight).
+- Caméra FPS pour naviguer dans la scène avec contrôle clavier et souris.
+- Shaders pour l'application de l'éclairage et des textures.
+- Interactions utilisateur pour activer/désactiver les lumières et changer l'affichage.
+
+## Structure du code
+- **ShaderProgram.cpp** : Gère la compilation et l'utilisation des shaders.
+- **Camera.cpp** : Implémente la caméra FPS pour le déplacement et la rotation.
+- **Mesh.cpp** : Contient la structure et les méthodes pour dessiner les modèles 3D.
+- **Lighting_Multiple.cpp** : Le point d'entrée principal qui configure l'éclairage et la scène.
+- **Texture2D.cpp** : Gère le chargement et l'application des textures.
+
+## Compilation et exécution
+Pour compiler et exécuter le projet, utilisez la commande suivante dans le terminal :
+
+```bash
+g++ ShaderProgram.cpp Camera.cpp Mesh.cpp Lighting_Multiple.cpp Texture2D.cpp -o app -lglfw -lGLEW -lGL
+./app
+```
+
+## Prérequis
+- **GLFW** : Bibliothèque pour la gestion des fenêtres et des entrées.
+- **GLEW** : Extension de gestion OpenGL.
+- **OpenGL 3.3** : Version minimale requise pour l'exécution.
+
+Assurez-vous que les bibliothèques nécessaires (GLFW, GLEW, OpenGL) soient correctement installées sur votre système.
+
+## Interactions utilisateur
+- **ESC** : Ferme l'application.
+- **F1** : Bascule entre l'affichage en fil de fer et l'affichage solide.
+- **F** : Active/désactive le spotlight (lampe de poche).
+- **ESPACE** : Active/désactive l'éclairage directionnel.
+
+## Conclusion
+Ce projet est un exemple complet d'une scène 3D avec éclairage avancé et interaction utilisateur. Il peut être utilisé comme base pour développer des applications graphiques plus complexes ou pour l'apprentissage des concepts d'éclairage en OpenGL.
+
