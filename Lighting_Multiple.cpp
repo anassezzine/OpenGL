@@ -28,9 +28,9 @@ bool gFlashlightOn = true;
 bool gLightOn = true;
 glm::vec4 gClearColor(0.06f, 0.06f, 0.07f, 1.0f);
 
-FPSCamera fpsCamera(glm::vec3(0.0f, 3.5f, 10.0f));
+FPSCamera fpsCamera(glm::vec3(0.0f, 13.5f, 40.0f));
 const double ZOOM_SENSITIVITY = -3.0;
-const float MOVE_SPEED = 5.0; // units per second
+const float MOVE_SPEED = 10.0; // units per second
 const float MOUSE_SENSITIVITY = 0.1f;
 
 
@@ -58,7 +58,7 @@ int main()
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
 
 	// Load meshes and textures
-	const int numModels = 10;
+	const int numModels = 11;
 	Mesh mesh[numModels];
 	Texture2D texture[numModels];
 
@@ -72,11 +72,12 @@ int main()
 	mesh[7].loadOBJ("models/car.obj");
 	mesh[8].loadOBJ("models/garden.obj");
 	mesh[9].loadOBJ("models/lampPost.obj");
+	mesh[10].loadOBJ("models/pool.obj");
 
 
 
 	
-	texture[0].loadTexture("textures/tile_floor.jpg", true);
+	texture[0].loadTexture("textures/terrain.jpg", true);
 	texture[1].loadTexture("textures/road.png", true);
 	texture[2].loadTexture("textures/house.png", true);
 	texture[3].loadTexture("textures/car.jpeg", true);
@@ -86,6 +87,7 @@ int main()
 	texture[7].loadTexture("textures/secondcar.jpeg", true);
 	texture[8].loadTexture("textures/garden.png", true);
 	texture[9].loadTexture("textures/lamp_post_diffuse.png", true);
+	texture[10].loadTexture("textures/pool.png", true);
 
 
 	
@@ -94,28 +96,30 @@ int main()
 		glm::vec3(0.0f, 0.0f, 0.0f),	// floor (x,y,z) -z recule, +z avance
 		glm::vec3(0.0f,-3.65f,0.0f),	// road
 		glm::vec3(0.0f,0.0f,-27.2f),	// house
-		glm::vec3(150.0f,0.5f,-5.0f),	// car
+		glm::vec3(150.0f,0.5f,-3.0f),	// car
 		glm::vec3(-25.0f,0.0f,-25.0f),	// lamp
 		glm::vec3(-25.0f,0.0f,-35.0f),	// lamp
 		glm::vec3(-25.0f,0.0f,-45.0f),	// lamp
 		glm::vec3(-19.0f,0.0f,-25.0f),	// second car
 		glm::vec3(22.3f,0.0f,-27.9f),	// garden
 		glm::vec3(15.0f,0.0f,-14.9f),	// lamp
+		glm::vec3(40.3f,-2.5f,-27.9f),	// pool
 
 	};
 
 	// Model scale
 	glm::vec3 modelScale[] = {
 		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
-		glm::vec3(0.5f, 0.5f, 0.5f),	// road
+		glm::vec3(0.5f, 0.5f, 0.3f),	// road
 		glm::vec3(1.3f, 1.3f, 1.3f),	// house
-		glm::vec3(0.03f, 0.03f, 0.03f),	// car
+		glm::vec3(0.02f, 0.02f, 0.02f),	// car
 		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
 		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
 		glm::vec3(2.0f, 2.0f, 2.0f),	// lamp
-		glm::vec3(0.03f, 0.03f, 0.03f),	// second car
+		glm::vec3(0.025f, 0.025f, 0.025f),	// second car
 		glm::vec3(0.5f, 0.5f, 1.0f),	// garden
 		glm::vec3(2.0f, 4.0f, 2.0f),	// lamp
+		glm::vec3(0.5f, 0.5f, 0.5f),	// pool
 	};
 
 	// Point Light positions
