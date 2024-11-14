@@ -11,7 +11,6 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 #include "Camera.h"
@@ -59,8 +58,7 @@ int main()
 
 	// Load meshes and textures
 	const int numModels = 11;
-	Mesh mesh[numModels];
-	Texture2D texture[numModels];
+	Mesh mesh[numModels];	Texture2D texture[numModels];
 
 	mesh[0].loadOBJ("models/floor.obj");
 	mesh[1].loadOBJ("models/road.obj");
@@ -127,8 +125,8 @@ int main()
 		glm::vec3(-25.0f,10.0f,-45.0f), //third lamp
 		glm::vec3(-25.0f,10.0f,-35.0f), //second lamp
 		glm::vec3(-25.0f,10.0f,-25.0f), //first lamp
-		glm::vec3(15.0f,17.0f,-10.0f),   //forth lamp
-		glm::vec3(0.0f,  5.0f,  -20.0f), //door
+		glm::vec3(15.0f,17.0f,-10.0f),  //forth lamp
+		glm::vec3(0.0f,  5.0f,  -20.0f),//door
 	};
 
 
@@ -427,7 +425,6 @@ void update(double elapsedTime, glm::vec3& pos)
     // Transformer pour qu'elle aille de +movementRange à -movementRange
     pos.x = movementRange - posX;
 
-
 	// Camera orientation
 	double mouseX, mouseY;
 
@@ -439,8 +436,6 @@ void update(double elapsedTime, glm::vec3& pos)
 
 	// Clamp mouse cursor to center of screen
 	glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
-
-	// Camera FPS movement
 
 	// Forward/backward
 	if (glfwGetKey(gWindow, GLFW_KEY_W) == GLFW_PRESS)
