@@ -37,6 +37,9 @@ Assurez-vous que les bibliothèques nécessaires (GLFW, GLEW, OpenGL) soient cor
 - **F** : Active/désactive le spotlight (lampe de poche).
 - **ESPACE** : Active/désactive l'éclairage directionnel.
 
+## Démonstration vidéo
+Une vidéo de démonstration complète du projet est disponible, expliquant le code et montrant la scène en action :
+[Voir la démonstration sur YouTube](https://www.youtube.com/watch?v=hUxK6ndhZFI)
+
 ## Conclusion
 Ce projet est un exemple complet d'une scène 3D avec éclairage avancé et interaction utilisateur. Il peut être utilisé comme base pour développer des applications graphiques plus complexes ou pour l'apprentissage des concepts d'éclairage en OpenGL.
-
