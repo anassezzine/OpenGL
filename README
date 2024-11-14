@@ -1,17 +1,14 @@
 # 🎮 Scene 3D Interactive avec OpenGL
+
 [![OpenGL](https://img.shields.io/badge/OpenGL-3.3-red.svg)](https://www.opengl.org/)
 [![GLFW](https://img.shields.io/badge/GLFW-3.3-blue.svg)](https://www.glfw.org/)
 [![GLEW](https://img.shields.io/badge/GLEW-2.1-green.svg)](http://glew.sourceforge.net/)
 
-<div align="center">
-  <p>
-    <strong>Une scène 3D interactive avec éclairage dynamique et modèles texturés</strong>
-  </p>
-  
-  [Voir la Démonstration](https://www.youtube.com/watch?v=hUxK6ndhZFI)
-</div>
+**Une scène 3D interactive avec éclairage dynamique et modèles texturés**
 
----
+[Voir la Démonstration](https://www.youtube.com/watch?v=hUxK6ndhZFI)
+
+</div>
 
 ## 📝 Description
 
@@ -26,6 +23,7 @@ Ce projet met en œuvre une scène 3D interactive utilisant OpenGL 3.3, démontr
 ## ✨ Fonctionnalités
 
 ### 🏗️ Éléments de la Scène
+
 - Rendu de 11 modèles 3D texturés
   - Sol et environnement
   - Bâtiments et structures
@@ -33,12 +31,14 @@ Ce projet met en œuvre une scène 3D interactive utilisant OpenGL 3.3, démontr
   - Éléments d'éclairage
 
 ### 💡 Système d'Éclairage
+
 - Lumière directionnelle (soleil)
 - Sources de lumière ponctuelles
 - Spotlight (lampe de poche)
 - Modèle d'éclairage Blinn-Phong
 
 ### 🎮 Contrôles
+
 - Navigation fluide en mode FPS
 - Contrôle complet de la caméra
 - Interaction avec les sources lumineuses
@@ -57,6 +57,7 @@ src/
 ## 🚀 Installation
 
 ### Prérequis
+
 - OpenGL 3.3+
 - GLFW 3.3+
 - GLEW 2.1+
@@ -80,6 +81,7 @@ g++ ShaderProgram.cpp Camera.cpp Mesh.cpp \
 ## 🎮 Guide d'Utilisation
 
 ### Commandes
+
 | Touche | Action |
 |--------|--------|
 | `ESC` | Quitter l'application |
@@ -94,22 +96,3 @@ g++ ShaderProgram.cpp Camera.cpp Mesh.cpp \
 Une vidéo détaillée expliquant le code et montrant la scène en action est disponible :
 
 [![Démonstration Vidéo](https://img.shields.io/badge/YouTube-Voir_la_Démo-red)](https://www.youtube.com/watch?v=hUxK6ndhZFI)
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Signaler des bugs
-- Proposer des améliorations
-- Soumettre des pull requests
-
-## 📜 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
----
-
-<div align="center">
-  <p>
-    <strong>Développé avec ❤️ pour les passionnés de graphisme 3D</strong>
-  </p>
-</div>
