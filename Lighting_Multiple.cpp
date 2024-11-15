@@ -24,8 +24,9 @@ int gWindowHeight = 768;
 GLFWwindow* gWindow = NULL;
 bool gWireframe = false;
 bool gFlashlightOn = true;
-bool gLightOn = true;
+bool gLightOn = false;
 glm::vec4 gClearColor(0.06f, 0.06f, 0.07f, 1.0f);
+
 
 FPSCamera fpsCamera(glm::vec3(0.0f, 13.5f, 40.0f));
 const double ZOOM_SENSITIVITY = -3.0;
@@ -55,6 +56,15 @@ int main()
 
 	ShaderProgram lightingShader;
 	lightingShader.loadShaders("shaders/lighting_dir_point_spot.vert", "shaders/lighting_dir_point_spot.frag");
+
+	// Variables pour la couleur de fond jour et nuit
+	float intensity;
+    glm::vec4 dayColor(0.39f, 0.66f, 0.92f, 1.0f); // Bleu clair pour le jour
+    glm::vec4 nightColor(0.0f, 0.0f, 0.0f, 1.0f);  // Noir pour la nuit
+    float nightFactor; // Facteur de transition entre le jour et la nuit
+    glm::vec4 currentBackgroundColor; // Couleur de fond actuelle
+	float cycleSpeed = 0.2f;
+
 
 	// Load meshes and textures
 	const int numModels = 11;
@@ -147,6 +157,14 @@ int main()
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		intensity = glm::mix(1.0f, 0.0f, nightFactor); // Ajustez les valeurs 0.1f et 1.0f pour le minimum et le maximum d'intensité.
+
+		// Ajustement de la couleur de fond selon la position du soleil
+		nightFactor =  glm::clamp<float>((cos(currentTime * cycleSpeed) + 1.0f) / 2.0f, 0.0f, 1.0f);
+		currentBackgroundColor = glm::mix(dayColor, nightColor, nightFactor); // Mélange de couleurs
+		glClearColor(currentBackgroundColor.r, currentBackgroundColor.g, currentBackgroundColor.b, currentBackgroundColor.a); // Couleur de fond
+
+
 		glm::mat4 model(1.0), view(1.0), projection(1.0);
 
 		// Create the View matrix
@@ -182,8 +200,9 @@ int main()
 		{
 			lightingShader.setUniform("sunLight.direction", glm::vec3(0.0f, -0.9f, -0.17f));
 			lightingShader.setUniform("sunLight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-			lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// dark
+			lightingShader.setUniform("sunLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));		// sun
 			lightingShader.setUniform("sunLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
+
 		}
 		
 
@@ -287,6 +306,7 @@ int main()
 	return 0;
 }
 
+
 //-----------------------------------------------------------------------------
 // Initialize GLFW and OpenGL
 //-----------------------------------------------------------------------------
@@ -335,8 +355,6 @@ bool initOpenGL()
 	// Hides and grabs cursor, unlimited movement
 	glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
-
-	glClearColor(gClearColor.r, gClearColor.g, gClearColor.b, gClearColor.a);
 
     // Define the viewport dimensions
     int w, h;
